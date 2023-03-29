@@ -256,11 +256,9 @@ def check_link(url,score_one,score_two,checker,time):
 
 
     def condition_ind_team1_oneGoal(data1_h,data1_a,data2_h,data2_a):
-        if data1_h[0] > 85 and data2_a[0] > 85:
-            return True
-        if data1_h[0] > 90 and data2_a[0]> 75:
-            return True
-        if data1_h[0]>98 and data2_a[0]> 65:
+        if (data1_h[0] > 90 and data1_a[0] >80) and (data2_a[0] > 90 and data2_h[0]>80):
+             return True
+        if data1_h[0]>95 and data2_a[0]> 95:
             return True
         if data1_h[0] + data1_a[0] > 180 and data2_h[0] + data2_a[0] > 180:
             return True
@@ -276,11 +274,9 @@ def check_link(url,score_one,score_two,checker,time):
             return True
 
     def condition_ind_team2_oneGoal(data2_a, data2_h, data1_a, data1_h):
-        if data2_a[0] > 85 and data1_h[0] > 85:
+        if (data2_a[0] > 90 and data2_h[0]>80) and (data1_h[0] > 90 and data1_a >80):
             return True
-        if data2_a[0] > 90 and data1_h[0] > 75:
-            return True
-        if data2_a[0] > 98 and data1_h[0] > 65:
+        if data2_a[0] > 95 and data1_h[0] > 95:
             return True
         if data2_h[1] + data2_a[1]  > 180 and data1_h[1] + data1_a[1] > 180:
             return True
@@ -296,19 +292,22 @@ def check_link(url,score_one,score_two,checker,time):
             return True
 
     def condition_total_one(data1_h,data1_a,data2_h,data2_a):
-        if data1_h[0]>=95 and data2_a[0]>=95:
-            if data1_a[0]>=80 and data2_h[0]>=80:
+        if data1_h[0]>99 and data2_a[0]>99:
+            if data1_a[0]>=95 and data2_h[0]>=95:
                 return True
-        if data1_h[0] + data1_a[0]>=190:
-            if data2_h[0] + data2_a[0]>=190:
+
+
+    def sub_condition_05(data1_h,data1_a,data2_h,data2_a):
+        if data1_h[0]>=75 and data1_a[0]>=75:
+            if data2_a[0]>=75 and data2_h[0]>=75:
                 return True
 
     def condition_total_more(data1_h,data1_a,data2_h,data2_a):
-        if data1_h[1]>=85 and data2_a[1]>=85:
-            if data1_a[0]>=70 and data2_h[0]>=70:
+        if data1_h[1]>=90 and data2_a[1]>=90:
+            if data1_a[0]>=80 and data2_h[0]>=80:
                 return True
-        if data1_h[1] + data1_a[1]>=170:
-            if data2_h[1] + data2_a[1]>=160:
+        if data1_h[1] + data1_a[1]>=180:
+            if data2_h[1] + data2_a[1]>=170:
                 return True
 
     team1_scoreOne = condition_ind_team1_oneGoal(team1_scoring_home,team1_scoring_away,team2_conceding_home,team2_conceding_away)
@@ -317,6 +316,8 @@ def check_link(url,score_one,score_two,checker,time):
     team2_scoreMore = condition_ind_team1_moreGoal(team2_scoring_away,team2_scoring_home,team1_conceding_away,team1_conceding_home)
     bothTotal_one = condition_total_one(team1_total_home,team1_total_away,team2_total_home,team2_total_away)
     bothTotal_more = condition_total_more(team1_total_home, team1_total_away, team2_total_home, team2_total_away)
+    sub_condition_home = sub_condition_05(team1_scoring_home,team1_scoring_away,team2_conceding_home,team2_conceding_away)
+    sub_condition_away = sub_condition_05(team2_scoring_home,team2_scoring_away,team1_conceding_home,team1_conceding_away)
 
     print("Condition1 - 1",team1_scoreOne, info_ind_t1One)
     print("Condition1 - more", team1_scoreMore, info_ind_t1More)
@@ -332,13 +333,25 @@ def check_link(url,score_one,score_two,checker,time):
 
     if checker == 1 and bothTotal_one == True:
         bet = (title,"TIME: "+str(time),"SCORE: "+current_score, ' '.join(map(str,team1_name)),' '.join(map(str,team2_name)),
-               "||| TOTAL OVER 0.5 |||",
+               "||| TOTAL OVER 0.5 NON CERTAIN |||",
                "COMMON:: " + info_totalOne,
                "1TEAM     :: " + info_ind_t1One,
                "2TEAM     :: " + info_ind_t2One
                )
 
         bet_siska(bet)
+
+    if checker == 1 and bothTotal_one == True:
+        if sub_condition_home == True and sub_condition_away == True:
+            bet = (title,"TIME: "+str(time),"SCORE: "+current_score, ' '.join(map(str,team1_name)),' '.join(map(str,team2_name)),
+                   "||| TOTAL OVER 0.5   %75% TRUE |||",
+                   "COMMON:: " + info_totalOne,
+                   "1TEAM     :: " + info_ind_t1One,
+                   "2TEAM     :: " + info_ind_t2One
+                   )
+
+            bet_siska(bet)
+
 
     if checker == 11 and team1_scoreOne == True:
         bet = (title,"TIME: "+str(time),"SCORE: "+current_score, ' '.join(map(str,team1_name)),' '.join(map(str,team2_name)),
